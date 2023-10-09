@@ -16,6 +16,10 @@ const userSchema = new mongoose_2.Schema({
         required: [true, 'Please fill email'],
         match: /^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@[A-Za-z0-9.-]+$/gm
     },
+    avatar: {
+        type: String,
+        default: ""
+    },
     password: {
         type: String,
         required: [true, 'Please fill password']

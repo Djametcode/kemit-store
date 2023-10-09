@@ -5,6 +5,7 @@ const app = express()
 
 import { connectDB } from './db/connectDB'
 import { userRoute } from './routes/userRoute'
+import { v2 as cloudinary } from 'cloudinary'
 
 app.use(cors({
     origin: ["http://localhost:3000"]
@@ -13,6 +14,12 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
 app.use('/api/v16/kemit-store', userRoute)
+
+cloudinary.config({
+    api_key: process.env.API_KEY,
+    api_secret: process.env.API_SECRET,
+    cloud_name: process.env.CLOUD_NAME
+})
 
 const startServer = async () => {
     try {

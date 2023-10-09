@@ -15,13 +15,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.loginAccount = exports.registAccount = void 0;
 const userModel_1 = require("../model/userModel");
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const cloudinary_1 = require("cloudinary");
 const registAccount = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { username, email, password } = req.body;
     try {
         if (!username || !email || !password) {
             return res.status(401).json({ msg: 'Please fill all requipment' });
         }
-        const isExist = yield userModel_1.userModel.find({ $or: [{ username: username }, { email: email }] });
+        const isExist = yield userModel_1.userModel.findOne({ username: username, email: email });
         console.log(isExist);
         if (isExist) {
             return res.status(201).json({ msg: 'Email or username already exist' });
@@ -57,10 +59,28 @@ const loginAccount = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         if (!isPassCorrect) {
             return res.status(401).json({ msg: 'Passoword wrong' });
         }
-        return res.status(200).json({ msg: 'Success', isExist });
+        const token = yield jsonwebtoken_1.default.sign({ userId: isExist._id, username: isExist.username }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES });
+        return res.status(200).json({ msg: 'Success', isExist, token });
     }
     catch (error) {
         console.log(error);
     }
 });
 exports.loginAccount = loginAccount;
+const updateAvatar = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let file = req.file;
+    try {
+        if (!file) {
+            return res.status(401).json({ msg: 'Please attach file' });
+        }
+        const result = yield cloudinary_1.v2.uploader.upload(file.path, {
+            folder: 'Testing',
+            resource_type: 'auto'
+        });
+        const user = yield userModel_1.userModel.findOneAndUpdate({ _id: req.user.userId }, { avatar: result.secure_url }, { new: true });
+        return res.status(200).json({ msg: "Success", user });
+    }
+    catch (error) {
+        console.log(error);
+    }
+});

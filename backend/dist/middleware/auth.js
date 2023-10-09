@@ -12,31 +12,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-require("dotenv/config");
-const express_1 = __importDefault(require("express"));
-const cors_1 = __importDefault(require("cors"));
-const app = (0, express_1.default)();
-const connectDB_1 = require("./db/connectDB");
-const userRoute_1 = require("./routes/userRoute");
-const cloudinary_1 = require("cloudinary");
-app.use((0, cors_1.default)({
-    origin: ["http://localhost:3000"]
-}));
-app.use(express_1.default.json());
-app.use(express_1.default.urlencoded({ extended: false }));
-app.use('/api/v16/kemit-store', userRoute_1.userRoute);
-cloudinary_1.v2.config({
-    api_key: process.env.API_KEY,
-    api_secret: process.env.API_SECRET,
-    cloud_name: process.env.CLOUD_NAME
-});
-const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
+exports.authorization = void 0;
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const header = req.headers.authorization;
+    if (!header || !header.startsWith("Bearer ")) {
+        return res.status(401).json({ msg: 'Please login first' });
+    }
+    const token = header.split(" ")[1];
     try {
-        yield (0, connectDB_1.connectDB)(process.env.MONGO_URL);
-        app.listen(3000, () => console.log(`Server running on port 3000`));
+        const data = yield jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
+        req.user = { userId: data.userId, username: data.username };
+        next();
     }
     catch (error) {
         console.log(error);
     }
 });
-startServer();
+exports.authorization = auth;
