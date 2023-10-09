@@ -9,6 +9,7 @@ interface User extends Document {
     username: string;
     email: string;
     password: string;
+    avatar: string;
     cart: Cart[]
 }
 
@@ -21,6 +22,10 @@ const userSchema = new Schema<User>({
         type: String,
         required: [true, 'Please fill email'],
         match: /^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@[A-Za-z0-9.-]+$/gm
+    },
+    avatar: {
+        type: String,
+        default: ""
     },
     password: {
         type: String,
