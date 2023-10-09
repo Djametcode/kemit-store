@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.loginAccount = exports.registAccount = void 0;
+exports.deleteAccount = exports.updateAvatar = exports.loginAccount = exports.registAccount = void 0;
 const userModel_1 = require("../model/userModel");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
@@ -68,12 +68,13 @@ const loginAccount = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 });
 exports.loginAccount = loginAccount;
 const updateAvatar = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    let file = req.file;
+    var _a;
+    let file = (_a = req.file) === null || _a === void 0 ? void 0 : _a.path;
     try {
         if (!file) {
             return res.status(401).json({ msg: 'Please attach file' });
         }
-        const result = yield cloudinary_1.v2.uploader.upload(file.path, {
+        const result = yield cloudinary_1.v2.uploader.upload(file, {
             folder: 'Testing',
             resource_type: 'auto'
         });
@@ -84,3 +85,14 @@ const updateAvatar = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         console.log(error);
     }
 });
+exports.updateAvatar = updateAvatar;
+const deleteAccount = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const user = yield userModel_1.userModel.findOneAndDelete({ _id: req.user.userId });
+        return res.status(200).json({ msg: "Success", user });
+    }
+    catch (error) {
+        console.log(error);
+    }
+});
+exports.deleteAccount = deleteAccount;

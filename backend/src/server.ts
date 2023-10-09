@@ -5,15 +5,17 @@ const app = express()
 
 import { connectDB } from './db/connectDB'
 import { userRoute } from './routes/userRoute'
+import { productRoute } from './routes/productRoute'
 import { v2 as cloudinary } from 'cloudinary'
 
 app.use(cors({
     origin: ["http://localhost:3000"]
 }))
 app.use(express.json())
-app.use(express.urlencoded({ extended: false }))
+app.use(express.urlencoded({ extended: true, limit: 10000000 }))
 
-app.use('/api/v16/kemit-store', userRoute)
+app.use('/api/v16/kemit-store/auth', userRoute)
+app.use('/api/v16/kemit-store/product', productRoute)
 
 cloudinary.config({
     api_key: process.env.API_KEY,

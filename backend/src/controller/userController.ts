@@ -66,13 +66,13 @@ const loginAccount = async (req: Request, res: Response) => {
 }
 
 const updateAvatar = async (req: Request, res: Response) => {
-    let file = req.file
+    let file = req.file?.path
     try {
         if (!file) {
             return res.status(401).json({ msg: 'Please attach file' })
         }
 
-        const result = await cloudinary.uploader.upload(file.path, {
+        const result = await cloudinary.uploader.upload(file, {
             folder: 'Testing',
             resource_type: 'auto'
         })

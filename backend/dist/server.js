@@ -18,13 +18,15 @@ const cors_1 = __importDefault(require("cors"));
 const app = (0, express_1.default)();
 const connectDB_1 = require("./db/connectDB");
 const userRoute_1 = require("./routes/userRoute");
+const productRoute_1 = require("./routes/productRoute");
 const cloudinary_1 = require("cloudinary");
 app.use((0, cors_1.default)({
     origin: ["http://localhost:3000"]
 }));
 app.use(express_1.default.json());
-app.use(express_1.default.urlencoded({ extended: false }));
-app.use('/api/v16/kemit-store', userRoute_1.userRoute);
+app.use(express_1.default.urlencoded({ extended: true, limit: 10000000 }));
+app.use('/api/v16/kemit-store/auth', userRoute_1.userRoute);
+app.use('/api/v16/kemit-store/product', productRoute_1.productRoute);
 cloudinary_1.v2.config({
     api_key: process.env.API_KEY,
     api_secret: process.env.API_SECRET,
