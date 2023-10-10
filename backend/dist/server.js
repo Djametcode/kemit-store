@@ -24,7 +24,7 @@ app.use((0, cors_1.default)({
     origin: ["http://localhost:3000"]
 }));
 app.use(express_1.default.json());
-app.use(express_1.default.urlencoded({ extended: true, limit: 10000000 }));
+app.use(express_1.default.urlencoded({ extended: true }));
 app.use('/api/v16/kemit-store/auth', userRoute_1.userRoute);
 app.use('/api/v16/kemit-store/product', productRoute_1.productRoute);
 cloudinary_1.v2.config({

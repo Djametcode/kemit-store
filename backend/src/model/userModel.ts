@@ -30,7 +30,13 @@ const userSchema = new Schema<User>({
     password: {
         type: String,
         required: [true, 'Please fill password']
-    }
+    },
+    cart: [{
+        cartId: {
+            type: Schema.Types.ObjectId,
+            ref: 'Cart'
+        }
+    }]
 })
 
 export const userModel = mongoose.model<User>('User', userSchema)

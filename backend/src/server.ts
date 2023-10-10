@@ -12,7 +12,7 @@ app.use(cors({
     origin: ["http://localhost:3000"]
 }))
 app.use(express.json())
-app.use(express.urlencoded({ extended: true, limit: 10000000 }))
+app.use(express.urlencoded({ extended: true }))
 
 app.use('/api/v16/kemit-store/auth', userRoute)
 app.use('/api/v16/kemit-store/product', productRoute)

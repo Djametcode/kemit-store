@@ -23,6 +23,12 @@ const userSchema = new mongoose_2.Schema({
     password: {
         type: String,
         required: [true, 'Please fill password']
-    }
+    },
+    cart: [{
+            cartId: {
+                type: mongoose_2.Schema.Types.ObjectId,
+                ref: 'Cart'
+            }
+        }]
 });
 exports.userModel = mongoose_1.default.model('User', userSchema);
