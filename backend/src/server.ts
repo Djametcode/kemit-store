@@ -9,7 +9,7 @@ import { productRoute } from './routes/productRoute'
 import { v2 as cloudinary } from 'cloudinary'
 
 app.use(cors({
-    origin: ["http://localhost:3000"]
+    origin: ["http://localhost:5173"]
 }))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
