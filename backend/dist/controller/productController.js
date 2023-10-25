@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteItemInsideCart = exports.deleteCart = exports.getMyCart = exports.addProductToCart = exports.deleteProduct = exports.getAllProduct = exports.updateProduct = exports.createProduct = void 0;
+exports.getProductById = exports.deleteItemInsideCart = exports.deleteCart = exports.getMyCart = exports.addProductToCart = exports.deleteProduct = exports.getAllProduct = exports.updateProduct = exports.createProduct = void 0;
 const productModel_1 = require("../model/productModel");
 const cloudinary_1 = require("cloudinary");
 const cartModel_1 = require("../model/cartModel");
@@ -21,32 +21,46 @@ const createProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         if (!productName || !price || !stock || !description) {
             return res.status(201).json({ msg: 'Please provide product information' });
         }
-        if (file) {
-            const result = yield cloudinary_1.v2.uploader.upload(file.path, {
-                folder: 'Testing',
-                resource_type: 'auto'
-            });
-            const newProduct = new productModel_1.productModel({
-                productName: productName,
-                price: price,
-                stock: stock,
-                description: description,
-                variant: [{
-                        color: color
-                    }],
-                image: [result.secure_url],
-                owner: req.user.userId
-            });
-            const product = yield productModel_1.productModel.create(newProduct);
-            return res.status(200).json({ msg: 'Success', product });
+        if (!file) {
+            return res.status(201).json({ msg: 'Please attach file' });
         }
-        return res.status(201).json({ msg: 'Please provide product image' });
+        const result = yield cloudinary_1.v2.uploader.upload(file.path, {
+            folder: 'Testing',
+            resource_type: 'auto'
+        });
+        const newProduct = new productModel_1.productModel({
+            productName: productName,
+            price: price,
+            stock: stock,
+            description: description,
+            variant: [{
+                    color: color
+                }],
+            image: [result.secure_url],
+            owner: req.user.userId
+        });
+        const product = yield productModel_1.productModel.create(newProduct);
+        return res.status(200).json({ msg: 'Success', product });
     }
     catch (error) {
         console.log(error);
     }
 });
 exports.createProduct = createProduct;
+const getProductById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    try {
+        const product = yield productModel_1.productModel.findOne({ _id: id });
+        if (!product) {
+            return res.status(404).json({ msg: 'Backend Error' });
+        }
+        return res.status(200).json({ msg: 'Success', product });
+    }
+    catch (error) {
+        console.log(error);
+    }
+});
+exports.getProductById = getProductById;
 const updateProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     const { productName, price, stock, description } = req.body;

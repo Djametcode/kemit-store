@@ -17,7 +17,8 @@ declare global {
             user: {
                 userId: string;
                 username: string
-            }
+            },
+            file: File
         }
     }
 }

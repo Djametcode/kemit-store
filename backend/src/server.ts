@@ -9,10 +9,10 @@ import { productRoute } from './routes/productRoute'
 import { v2 as cloudinary } from 'cloudinary'
 
 app.use(cors({
-    origin: ["http://localhost:5173"]
+    origin: ["http://localhost:5173", "*"]
 }))
 app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+app.use(express.urlencoded({ extended: false }))
 
 app.use('/api/v16/kemit-store/auth', userRoute)
 app.use('/api/v16/kemit-store/product', productRoute)

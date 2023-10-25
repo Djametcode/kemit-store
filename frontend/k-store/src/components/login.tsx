@@ -2,6 +2,7 @@ import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
 import { loginHandler } from "../handler/loginHandler";
 import React, { useState } from "react";
+import Cookies from "js-cookie";
 
 export const LoginComponent = () => {
   const [email, setEmail] = useState<string>("");
@@ -18,8 +19,11 @@ export const LoginComponent = () => {
   const loginUser = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await loginHandler({ email: email, password: password });
-      console.log(response);
+      const response: { token: string } = await loginHandler({
+        email: email,
+        password: password,
+      });
+      Cookies.set("token", response.token);
       setEmail("");
       setPassword("");
     } catch (error) {

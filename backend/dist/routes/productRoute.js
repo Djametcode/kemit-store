@@ -15,4 +15,5 @@ route.patch('/update-product/:id', auth_1.authorization, multer_1.upload, produc
 route.post('/add-to-cart/:id', auth_1.authorization, productController_1.addProductToCart);
 route.get('/my-cart', auth_1.authorization, productController_1.getMyCart);
 route.delete('/delete-cart/:id', auth_1.authorization, productController_1.deleteCart);
+route.get('/detail-product/:id', auth_1.authorization, productController_1.getProductById);
 exports.productRoute = route;

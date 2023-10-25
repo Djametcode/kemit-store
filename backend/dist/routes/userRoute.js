@@ -13,4 +13,5 @@ router.post('/regist-account', userController_1.registAccount);
 router.post('/login-account', userController_1.loginAccount);
 router.patch('/update-account', auth_1.authorization, multer_1.upload, userController_1.updateAvatar);
 router.delete('/delete-account', userController_1.deleteAccount);
+router.get('/current-user', auth_1.authorization, userController_1.getCurrentUser);
 exports.userRoute = router;

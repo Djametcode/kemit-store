@@ -95,4 +95,14 @@ const deleteAccount = async (req: Request, res: Response) => {
     }
 }
 
-export { registAccount, loginAccount, updateAvatar, deleteAccount }
+const getCurrentUser = async (req: Request, res: Response) => {
+    try {
+        const user = await userModel.findOne({ _id: req.user.userId }).select({ password: false });
+
+        return res.status(200).json({ msg: 'Success', user })
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export { registAccount, loginAccount, updateAvatar, deleteAccount, getCurrentUser }

@@ -13,30 +13,45 @@ const createProduct = async (req: Request, res: Response) => {
             return res.status(201).json({ msg: 'Please provide product information' })
         }
 
-        if (file) {
-            const result = await cloudinary.uploader.upload(file.path, {
-                folder: 'Testing',
-                resource_type: 'auto'
-            })
-            const newProduct = new productModel({
-                productName: productName,
-                price: price,
-                stock: stock,
-                description: description,
-                variant: [{
-                    color: color
-                }],
-                image: [result.secure_url],
-                owner: req.user.userId
-            })
-
-            const product = await productModel.create(newProduct)
-
-            return res.status(200).json({ msg: 'Success', product })
+        if (!file) {
+            return res.status(201).json({ msg: 'Please attach file' });
         }
 
-        return res.status(201).json({ msg: 'Please provide product image' })
+        const result = await cloudinary.uploader.upload(file.path, {
+            folder: 'Testing',
+            resource_type: 'auto'
+        })
+        const newProduct = new productModel({
+            productName: productName,
+            price: price,
+            stock: stock,
+            description: description,
+            variant: [{
+                color: color
+            }],
+            image: [result.secure_url],
+            owner: req.user.userId
+        })
 
+        const product = await productModel.create(newProduct)
+
+        return res.status(200).json({ msg: 'Success', product })
+
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+const getProductById = async (req: Request, res: Response) => {
+    const { id } = req.params
+    try {
+        const product = await productModel.findOne({ _id: id })
+
+        if (!product) {
+            return res.status(404).json({ msg: 'Backend Error' })
+        }
+
+        return res.status(200).json({ msg: 'Success', product })
     } catch (error) {
         console.log(error)
     }
@@ -169,4 +184,4 @@ const deleteItemInsideCart = async (req: Request, res: Response) => {
         console.log(error)
     }
 }
-export { createProduct, updateProduct, getAllProduct, deleteProduct, addProductToCart, getMyCart, deleteCart, deleteItemInsideCart }
+export { createProduct, updateProduct, getAllProduct, deleteProduct, addProductToCart, getMyCart, deleteCart, deleteItemInsideCart, getProductById }

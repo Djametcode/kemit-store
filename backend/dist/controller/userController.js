@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteAccount = exports.updateAvatar = exports.loginAccount = exports.registAccount = void 0;
+exports.getCurrentUser = exports.deleteAccount = exports.updateAvatar = exports.loginAccount = exports.registAccount = void 0;
 const userModel_1 = require("../model/userModel");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
@@ -96,3 +96,13 @@ const deleteAccount = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.deleteAccount = deleteAccount;
+const getCurrentUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const user = yield userModel_1.userModel.findOne({ _id: req.user.userId }).select({ password: false });
+        return res.status(200).json({ msg: 'Success', user });
+    }
+    catch (error) {
+        console.log(error);
+    }
+});
+exports.getCurrentUser = getCurrentUser;
